@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
+
 
 function SignUpLogIn() {
     const [isSignUp, setIsSignUp] = useState(true);
-    const [formData, setFormData] = useState({ name: '', username: '', email: '', password: '' });
+    const [formData, setFormData] = useState({ 
+        name: '', 
+        username: '', 
+        email: '', 
+        password: '' 
+    });
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
+    const { setUser } = useUser();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -37,9 +45,12 @@ function SignUpLogIn() {
             
             // Clear UI form data
             setFormData({ name: '', username: '', email: '', password: '' });
+            
+            // Set user data in context
+            setUser({ name: data.name, username: data.username, id: data.id });
 
             // Navigate to users specific route using their unique ID
-            navigate(`/users/${data.id}`);
+            navigate(`/homepage/${data.id}`);
         } else {
             setMessage(`Error: ${data.message}`);
             alert('There is already an account registered with the email address. Please sign in or use a different email.');
