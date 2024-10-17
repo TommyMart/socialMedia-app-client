@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useUserData } from "../../contexts/UserContext";
 
 
-
-
 function SignUpLogIn() {
     const [isSignUp, setIsSignUp] = useState(true);
     
@@ -44,7 +42,7 @@ function SignUpLogIn() {
         // If there's a response
         if (response.ok) {
             setMessage(`Success: ${data.message}`);
-            // localStorage.setItem('token', data.token);
+            localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.id);
 
             setUserData({
