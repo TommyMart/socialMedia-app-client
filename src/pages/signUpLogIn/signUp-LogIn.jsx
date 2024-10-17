@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserData } from "../../contexts/UserContext";
+
 
 
 
 function SignUpLogIn() {
-    // `isSignUp` is a boolean state that toggles between Sign Up and Log In mode
     const [isSignUp, setIsSignUp] = useState(true);
     
-    // `formData` stores the user's input in the form fields for name, username, email, and password
     const [formData, setFormData] = useState({ 
         name: '', 
         username: '', 
@@ -15,43 +15,44 @@ function SignUpLogIn() {
         password: '' 
     });
 
-    // `message` holds any success or error messages to display to the user after submitting the form
+    const { setUserData } = useUserData(); // Access the setUserData function from context
     const [message, setMessage] = useState('');
-    
-    // `navigate` is used to redirect the user to another route after login/signup
     const navigate = useNavigate();
-
-    // This function handles changes in the form inputs. It updates the `formData` state whenever the user types in the input fields.
     const handleChange = (event) => {
-        const { name, value } = event.target;  // Destructure the input field's name and value
+        const { name, value } = event.target;  
         // Update the formData state by setting the value for the corresponding field (name, username, email, or password)
         setFormData({ ...formData, [name]: value });
-    }
+    };
 
-    // This function handles the form submission for both signup and login
     const handleSubmit = async (event) => {
         event.preventDefault();  // Prevent the default form submission behavior (which would refresh the page)
         try {
-            // Choose the correct API endpoint depending on whether the user is signing up or logging in
-        const endpoint = isSignUp ? 'http://localhost:3000/users/signup' : 'http://localhost:3000/users/login';
-        
-        // Make a POST request to the selected endpoint, sending the form data in JSON format
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData) // Convert the form data into a JSON string to send to the server
+            const endpoint = isSignUp 
+            ? 'http://localhost:3000/users/signup' 
+            : 'http://localhost:3000/users/login';
+            
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData) 
         });
 
         const data = await response.json();  // Parse the JSON response from the server
 
-        // If the response from the server indicates success
+        // If there's a response
         if (response.ok) {
-            // Display a success message in the UI
             setMessage(`Success: ${data.message}`);
             // localStorage.setItem('token', data.token);
             localStorage.setItem('userId', data.id);
+
+            setUserData({
+                id: data.id,
+                name: data.name,
+                username: data.username,
+                email: data.email
+            });
 
             const welcomeMessage = isSignUp
                 ? `Welcome ${formData.name}, we're looking forward to assisting you in reaching your musical goals!`
@@ -67,11 +68,8 @@ function SignUpLogIn() {
             }
             
         } else {
-            // If the response indicates an error (e.g., duplicate email), display the error message
             setMessage(`Error: ${data.message}`);
             alert('There is already an account registered with the email address. Please sign in or use a different email.');
-            
-            // Clear the form data in case of an error
             setFormData({ name: '', username: '', email: '', password: '' });
         }
     } catch (error) {
@@ -81,7 +79,7 @@ function SignUpLogIn() {
         
 
     return (
-        <div>
+        <div className="signUpLogIn">
             <button
                 className="signUp"
                 onClick={() => {

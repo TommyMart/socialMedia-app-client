@@ -1,0 +1,33 @@
+.navBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  margin: 0 0;
+  padding: 0%;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+  margin-left: 5rem;
+  /* justify-content: center;
+  gap: 4rem; */
+  /* display: inline; */
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 1rem;
+  text-decoration: none;
+}
