@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "../../contexts/UserContext";
+import './signUpLogIn.css'
 
 
 function SignUpLogIn() {
@@ -77,6 +78,8 @@ function SignUpLogIn() {
         
 
     return (
+        <>
+        <h1 className="header">Electronic Music App V2</h1>
         <div className="signUpLogIn">
             <button
                 className="signUp"
@@ -161,6 +164,7 @@ function SignUpLogIn() {
                 {message && <p>{message}</p>}
             </form>
         </div>
+        </>
     );
 }
 

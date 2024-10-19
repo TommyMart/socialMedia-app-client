@@ -1,7 +1,20 @@
 .signUpLogIn {
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* Stacks items vertically */
+  align-items: center; /* Centers the content horizontally */
+  justify-content: center; /* Centers the content vertically */
+  height: 100vh; /* Full viewport height for centering */
   padding: 2rem;
   text-align: center;
-  justify-content: center;
+}
+
+/* Style for the header to stick to the top */
+.header {
+  position: fixed; /* Keeps the header fixed at the top */
+  top: 1rem; /* Aligns the header to the top */
+  left: 0;
+  width: 100%; /* Stretches the header across the screen */
+  padding: 2rem 0;
+  text-align: center;
+  z-index: 100; /* Ensures the header stays above other content */
 }
