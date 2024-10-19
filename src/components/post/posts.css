@@ -1,0 +1,29 @@
+.posts {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.post {
+  border: 2px solid black;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.postContainer {
+  display: flex;
+  background-color: white;
+}
+
+.postEntryContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers items horizontally */
+  justify-content: center; /* Centers items vertically */
+  width: 100%; /* Adjust width as needed */
+  margin: 0 auto; /* Centers the container if a fixed width is set */
+}
