@@ -9,7 +9,7 @@ const Post = () => {
     const [posts, setPosts] = useState([]);
     // const [location, setLocation] = useState('');
     // const [tags, setTags] = useState('');
-
+    // commnet
 
     const handleSubmit = async (event) => {
         event.preventDefault();
