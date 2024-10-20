@@ -13,6 +13,8 @@ const Post = () => {
 
     const username = userData.username || (localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).username : null);
 
+    const userId = userData.userId || (localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).userId : null);
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -30,10 +32,18 @@ const Post = () => {
         };
 
         fetchPosts();
-    }, [userData.id]); 
+    }, [userId]); 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        const postData = {
+            userId: userId, 
+            content: newPost, 
+            title: title
+        };
+
+        console.log('Debugging post data:', postData);
 
         try {
             const response = await fetch('http://localhost:3000/users/post', {
@@ -42,7 +52,7 @@ const Post = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ 
-                    // userId: userData.id, 
+                    userId: userId, 
                     content: newPost, 
                     title: title,
                     // location: location,

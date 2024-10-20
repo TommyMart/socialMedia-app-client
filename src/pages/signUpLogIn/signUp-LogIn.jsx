@@ -44,10 +44,10 @@ function SignUpLogIn() {
         if (response.ok) {
             setMessage(`Success: ${data.message}`);
             localStorage.setItem('token', data.token);
-            localStorage.setItem('userId', data.id);
+            // localStorage.setItem('userId', data.id);
 
             setUserData({
-                id: data.id,
+                userId: data.id,
                 name: data.name,
                 username: data.username,
                 email: data.email
