@@ -53,6 +53,8 @@ function SignUpLogIn() {
                 email: data.email
             });
 
+            // localStorage.setItem('userData', userData)
+
             const welcomeMessage = isSignUp
                 ? `Welcome ${formData.name}, we're looking forward to assisting you in reaching your musical goals!`
                 : `Welcome back ${data.name}, we're looking forward to assisting you in reaching your musical goals!`;

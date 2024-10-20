@@ -1,6 +1,6 @@
 // Create the context
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 // Create customs hooks to access the context provider
 export function useUserData() {
@@ -12,9 +12,23 @@ const UserDataContext = createContext({});
 
 export default function UserProvider(props){
 
-    let [userData, setUserData] = useState({});
+    let [userData, setUserData] = useState(() => {
+        // Try to load user data from localStorage when the app starts
+        const savedUserData = localStorage.getItem('userData');
+        return savedUserData ? JSON.parse(savedUserData) : null;
+    });
 
-    return(
+    useEffect(() => {
+        // Save userData to localstorage whenever it changes
+        if (userData) {
+            localStorage.getItem('userData', JSON.stringify(userData));
+        } else {
+            // If userData is cleared, remove from local storage
+            localStorage.removeItem('userData');
+        }
+    }, [userData]);
+
+    return (
         <UserDataContext.Provider value={{ userData, setUserData }}>
             {props.children}
         </UserDataContext.Provider >
