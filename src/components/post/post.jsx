@@ -11,6 +11,8 @@ const Post = () => {
     // const [tags, setTags] = useState('');
     // commnet
 
+    const username = userData.username || (localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).username : null);
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -106,7 +108,7 @@ const Post = () => {
                 {Array.isArray(posts) && posts.map(post => (
                     <li key={post.id} className="post">
                         <p>{post.content}</p>
-                        {/* <small>Posted by: {userData.username}</small> */}
+                        <small>Posted by: {username}</small>
                         <small>Title: {post.title}</small>
                         {/* <small>Location: {post.location}</small>
                         <small>Tags: {post.tags.join(', ')}</small> */}
