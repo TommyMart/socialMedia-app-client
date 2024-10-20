@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useUserData } from "../../contexts/UserContext";
 import './posts.css'
 
@@ -10,6 +10,25 @@ const Post = () => {
     // const [location, setLocation] = useState('');
     // const [tags, setTags] = useState('');
     // commnet
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/users/posts`);
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Fetched data: ', data);
+                    setPosts(data.posts);
+                } else {
+                    console.error('Failed to fetch posts');
+                }
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        };
+
+        fetchPosts();
+    }, [userData.id]); 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -84,7 +103,7 @@ const Post = () => {
             </div>
             <h2>Posts</h2>
             <ul className="postContainer">
-                {posts.map(post => (
+                {Array.isArray(posts) && posts.map(post => (
                     <li key={post.id} className="post">
                         <p>{post.content}</p>
                         {/* <small>Posted by: {userData.username}</small> */}
