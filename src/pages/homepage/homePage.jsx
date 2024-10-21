@@ -1,31 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useUserData } from "../../contexts/UserContext";
+
 
 function HomePage() {
     const { userId } = useParams();
-    const { userData } = useUserData();
+    const { userData, removeToken } = useUserData();
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
+    const location = useLocation(); // Provides current route
+    
+    
+    useEffect(() => {
+        if (userData && userData.userId === userId) {
+            setUser(userData); // Set user data if it matches the URL param
+        } else {
+            setUser(null); // Clear user state if not matched
+        }
+    }, [userData, userId]);
 
     // useEffect(() => {
-    //     const fetchUser = async () => {
-    //         try {
-    //             const response = await fetch(`http://localhost:3000/users/${userId}`);
-    //             if (!response.ok) {
-    //                 throw new Error('Network response was not ok');
-    //             }
-    //             const data = await response.json();
-    //             setUser(data);
-    //         } catch (error) {
-    //             console.error("Error fetching user data:", error);
-    //         }
-    //     };
+    //     // If user is authenticated with valid userData and userId (params)
+    //     if (userData && userData.userId === userId) {
+    //         if (userData.userId === userId) {
+    //             // set user data context
+    //             setUser(userData);
+    //         } else if (location.pathname !== `/users/${userData.userId}/home`) {
 
-    //     if (userId) {
-    //         fetchUser();
+    //             navigate(`/users/${userData.userId}/home`, { replace: true })
+    //         }
+    //     } else {
+    //         // If no valid token or userId, redirect to login and clear
+    //         removeToken();
+    //         navigate('/', { replace: true })
     //     }
-    // }, [userId]);
-     
+    // }, [userData, userId, navigate, removeToken, location.pathname]);
+
+    useEffect(() => {
+        if (!userData) {
+            navigate('/');
+        }
+    }, [userData, navigate])
+
     return (
         <div>
             
@@ -33,6 +49,9 @@ function HomePage() {
                 <h1>Welcome to your home page, {userData.name}.</h1>
             ) : (
                 <h1>Loading...</h1> // Display loading message while fetching user data
+            )}
+            {user && (
+                <p>Your username is {user.username}</p>
             )}
         </div>
     )

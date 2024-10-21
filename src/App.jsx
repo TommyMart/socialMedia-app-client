@@ -1,13 +1,13 @@
+import './App.css';
 
-import './App.css'
-
-import HomePage from './pages/homepage/homePage'
-import SignUpLogIn from './pages/signUpLogIn/signUp-LogIn'
-import { RouterProvider, createBrowserRouter, Outlet, useLocation  } from 'react-router-dom'
+import HomePage from './pages/homepage/homePage';
+import SignUpLogIn from './pages/signUpLogIn/signUp-LogIn';
+import { RouterProvider, createBrowserRouter, Outlet, useLocation } from 'react-router-dom';
 import NavBar from './components/NavBar/navBar';
 import Tutorials from './pages/tutorials/tutorials';
 import About from './pages/About/about';
 import Account from './pages/Account/account';
+import ProtectedRoute from './components/protectedRoute'; // Path updated to match correct location of the ProtectedRoute
 
 // Layout component that includes NavBar conditionally
 function MainLayout() {
@@ -34,24 +34,36 @@ const router = createBrowserRouter([
         element: <SignUpLogIn /> // No NavBar here because it's in the MainLayout condition
       },
       {
-        path: '/users/:userId/home', 
-        element: <HomePage /> // HomePage wrapped with NavBar due to MainLayout
+        path: '/users/:userId/home',  
+        element: (
+          <ProtectedRoute>
+            <HomePage />  
+          </ProtectedRoute>
+        )
       },
       {
-        path: 'users/:userId/tutorials',
-        element: <Tutorials />
+        path: '/users/:userId/tutorials',
+        element: (
+          <ProtectedRoute>
+            <Tutorials /> 
+          </ProtectedRoute>
+        )
       },
       {
-        path: 'users/:userId/about',
-        element: <About />
+        path: '/users/:userId/about',
+        element: (
+          <ProtectedRoute>
+            <About />  
+          </ProtectedRoute>
+        )
       },
       {
-        path: 'users/:userId/tutorials',
-        element: <Account />
-      },
-      {
-        path: 'users/:userId/account',
-        element: <Account />
+        path: '/users/:userId/account',
+        element: (
+          <ProtectedRoute>
+            <Account />  
+          </ProtectedRoute>
+        )
       }
     ]
   }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "../../contexts/UserContext";
 import './signUpLogIn.css'
@@ -14,17 +14,26 @@ function SignUpLogIn() {
         password: '' 
     });
 
-    const { setUserData } = useUserData(); // Access the setUserData function from context
+    // Access the setToken function and userData from context
+    const { setToken, userData } = useUserData(); 
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Navigate to specific user home page if userId is truthy
+        if (userData?.userId) {
+            navigate(`/users/${userData.userId}/home`, {replace: true});
+        }
+    }, [userData, navigate]);
+
     const handleChange = (event) => {
         const { name, value } = event.target;  
-        // Update the formData state by setting the value for the corresponding field (name, username, email, or password)
+        // Update the formData state by setting the value for the corresponding field 
         setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (event) => {
-        event.preventDefault();  // Prevent the default form submission behavior (which would refresh the page)
+        event.preventDefault();  
         try {
             const endpoint = isSignUp 
             ? 'http://localhost:3000/users/signup' 
@@ -40,20 +49,14 @@ function SignUpLogIn() {
 
         const data = await response.json();  // Parse the JSON response from the server
 
-        // If there's a response
+        // If response is OK, process token and user data
         if (response.ok) {
             setMessage(`Success: ${data.message}`);
-            localStorage.setItem('token', data.token);
-            // localStorage.setItem('userId', data.id);
 
-            setUserData({
-                userId: data.id,
-                name: data.name,
-                username: data.username,
-                email: data.email
-            });
+            console.log('Received token:', data.token);
 
-            // localStorage.setItem('userData', userData)
+            // Store the JWT token and set user data using the context's setToken
+            setToken(data.token);
 
             const welcomeMessage = isSignUp
                 ? `Welcome ${formData.name}, we're looking forward to assisting you in reaching your musical goals!`
@@ -63,25 +66,20 @@ function SignUpLogIn() {
             // Clear the form inputs after successful submission
             setFormData({ name: '', username: '', email: '', password: '' });
 
-            // If user data is successfully fetched and includes an ID, navigate to the user's specific page
-            if (data && data.id) {
-                navigate(`/users/${data.id}/home`);
-            }
-            
         } else {
             setMessage(`Error: ${data.message}`);
-            alert('There is already an account registered with the email address. Please sign in or use a different email.');
-            setFormData({ name: '', username: '', email: '', password: '' });
+            alert(data.message);
         }
     } catch (error) {
-        setMessage('An error has occured. Please try again.', error)
+        setMessage('An error has occured. Please try again.');
+        console.log('Signup/Login Error:', error);
     }
 }
         
 
     return (
         <>
-        <h1 className="header">Electronic Music App V2</h1>
+        <h1 className="header">Rattle Snake</h1>
         <div className="signUpLogIn">
             <button
                 className="signUp"

@@ -1,8 +1,7 @@
-// Create the context
-
 import { createContext, useContext, useEffect, useState } from "react";
+import Cookies from 'js-cookie';
 
-// Create customs hooks to access the context provider
+// Create customs hook to access the context provider
 export function useUserData() {
     return useContext(UserDataContext)
 }
@@ -10,33 +9,53 @@ export function useUserData() {
 // Create the context provider
 const UserDataContext = createContext({});
 
-export default function UserProvider(props){
+export default function UserProvider({ children }){
+    const [userData, setUserData] = useState(null);
 
-    const [userData, setUserData] = useState(() => {
+    // Function to decode JWT manually
+    const decodeJwt = (token) => {
         try {
-            const savedUserData = localStorage.getItem('userData');
-            return savedUserData ? JSON.parse(savedUserData) : null;
+            const base64Url = token.split('.')[1]; // Get the payload part of the token
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload); // Return the decoded payload as a JavaScript object
         } catch (error) {
-            console.error("Failed to parse user data from localStorage:", error);
-            return null; // Fallback to null if parsing fails
+            console.error('Error decoding token:', error);
+            return null;
         }
-    });
+    }
+
+    const setToken = (token) => {
+        Cookies.set('jwtToken', token, { expires: 2 });
+        const decoded = decodeJwt(token);
+        setUserData(decoded); // Set user data based on decoded token
+    };
+    
+    const removeToken = () => {
+        Cookies.remove('jwtToken');
+        setUserData(null);
+    };
 
     useEffect(() => {
-        // Save userData to localstorage whenever it changes
-        if (userData) {
-            localStorage.setItem('userData', JSON.stringify(userData));
-        } else {
-            // If userData is cleared, remove from local storage
-            localStorage.removeItem('userData');
+        const token = Cookies.get('jwtToken'); // Get token from cookies on page load
+        
+        if (token) {
+            const decoded = decodeJwt(token);
+            const currentTime = Date.now() / 1000;
+            if (decoded && decoded.exp && decoded.exp < currentTime) {
+                console.log('Token has expired');
+                removeToken();
+            } else {
+                setUserData(decoded); // Set the decoded user data in state
+            }
         }
-    }, [userData]);
+    }, []);
 
     return (
-        <UserDataContext.Provider value={{ userData, setUserData }}>
-            {props.children}
+        <UserDataContext.Provider value={{ userData, setToken, removeToken }}>
+            {children}
         </UserDataContext.Provider >
-    )
-}
-
-
+    );
+};

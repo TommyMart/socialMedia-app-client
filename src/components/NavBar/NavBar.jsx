@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useUserData } from '../../contexts/UserContext';
 import './navBar.css'
 
 function NavBar() {
 
-    const userId = localStorage.getItem('userId');
+    const { userData } = useUserData();
+    const userId = userData?.userId;
     
     return (
         <>

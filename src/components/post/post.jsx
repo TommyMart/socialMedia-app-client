@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import { useUserData } from "../../contexts/UserContext";
 import Comments from '../comments/comments.jsx';
-import './posts.css'
+import Cookies from 'js-cookie';
+import './posts.css';
 
 const Post = () => {
     const [newPost, setNewPost] = useState('');
@@ -9,27 +10,31 @@ const Post = () => {
     const [editPostId, setEditPostId] = useState(null);
     const [editPostContent, setEditPostContent] = useState('');
     const [editPostTitle, setEditPostTitle] = useState('');
-    const userData = useUserData();
+    const { userData, removeToken } = useUserData();
     const [posts, setPosts] = useState([]);
-    // const [location, setLocation] = useState('');
-    // const [tags, setTags] = useState('');
-    // commnet
 
+    // Correctly extract username and userId from userData
+    const username = userData?.username; 
+    const userId = userData?.userId;
 
-    const username = userData.username || (localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).username : null);
-
-    const userId = userData.userId || (localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).userId : null);
-
+    // Fetch posts from the server
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/users/posts`);
+                const response = await fetch(`http://localhost:3000/posts/getPosts`, {
+                    headers: {
+                        Authorization: `Bearer ${Cookies.get('jwtToken')}` // Send the token in the Authorization header
+                    }
+                });
                 if (response.ok) {
                     const data = await response.json();
                     console.log('Fetched data: ', data);
                     setPosts(data.posts);
                 } else {
                     console.error('Failed to fetch posts');
+                    if (response.status === 401) {
+                        removeToken(); // Remove token if unauthorized
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching posts:', error);
@@ -37,10 +42,16 @@ const Post = () => {
         };
 
         fetchPosts();
-    }, [userId]); 
+    }, [userId, removeToken]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Ensure userId, newPost, and title are defined
+        if (!userId || !newPost || !title) {
+            console.error('Missing required fields for post submission.');
+            return;
+        }
 
         const postData = {
             userId: userId, 
@@ -51,34 +62,25 @@ const Post = () => {
         console.log('Debugging post data:', postData);
 
         try {
-            const response = await fetch('http://localhost:3000/users/post', {
+            const response = await fetch('http://localhost:3000/posts/post', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('jwtToken')}` // Send the token in the Authorization header
                 },
-                // body: JSON.stringify({ postData })
-                body: JSON.stringify({ 
-                    userId: userId, 
-                    content: newPost, 
-                    title: title
-                //     // location: location,
-                //     // tags: tags.split(', ').map(tag => tag.trim())
-
-                }),
+                body: JSON.stringify(postData)
             });
 
             if (response.ok) {
                 const createdPost = await response.json();
-                
-                // Update state with new post that includes userId (with username)
+                // Update state with new post
                 setPosts(prevPosts => [createdPost.post, ...prevPosts]); // Prepend the new post to the posts array
                 setNewPost(''); 
                 setTitle(''); 
-                // setLocation(''); 
-                // setTags(''); 
 
             } else {
-                console.error('Failed to create a post');
+                const errorData = await response.json();
+                console.error('Failed to create a post:', errorData.message || errorData);
             }
         } catch (error) {
             console.error('Error submitting the post:', error);
@@ -87,8 +89,11 @@ const Post = () => {
 
     const handleDelete = async (postId) => {
         try {
-            const response = await fetch(`http://localhost:3000/users/post/${postId}`, {
+            const response = await fetch(`http://localhost:3000/posts/${postId}/delete`, {
                 method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${Cookies.get('jwtToken')}`
+                }
             });
 
             if (response.ok) {
@@ -104,11 +109,12 @@ const Post = () => {
 
     const handleEdit = async (postId) => {
         try {
-            const response = await fetch(`http://localhost:3000/users/post/${postId}`,
+            const response = await fetch(`http://localhost:3000/posts/${postId}/editPost`,
                 {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
+                        Authorization: `Bearer ${Cookies.get('jwtToken')}`
                     },
                     body: JSON.stringify({
                         content: editPostContent,
@@ -148,24 +154,12 @@ const Post = () => {
                     placeholder="title"
                     required
                     ></input>
-                    {/* <input 
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    placeholder="location"
-                    ></input> */}
                 <textarea
                     value={newPost}
                     onChange={(e) => setNewPost(e.target.value)}
                     placeholder="post"
                     required>
                 </textarea>
-                {/* <textarea
-                    value={tags}
-                    onChange={(e) => setTags(e.target.value)}
-                    placeholder="tags"
-                    >
-                    
-                </textarea> */}
             <button type="submit">Submit</button>
             
             </form >
@@ -174,7 +168,6 @@ const Post = () => {
             <ul className="postContainer">
                 {Array.isArray(posts) && posts.map(post => (
                     <li key={post._id} className="post">
-                        {/* Check if in edit mode for the current post */}
                         {editPostId === post._id ? (
                             <>
                                 <input
@@ -206,7 +199,8 @@ const Post = () => {
                                         </button>
                                     </>
                                 )}
-                                <Comments postId={post._id} />
+                                <Comments 
+                                    postId={post._id || post.id} />
                             </>
                         )}
                     </li>
