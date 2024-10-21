@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useUserData } from "../../contexts/UserContext";
+import Comments from '../comments/comments.jsx';
 import './posts.css'
 
 const Post = () => {
@@ -205,6 +206,7 @@ const Post = () => {
                                         </button>
                                     </>
                                 )}
+                                <Comments postId={post._id} />
                             </>
                         )}
                     </li>

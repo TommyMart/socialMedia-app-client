@@ -1,0 +1,22 @@
+.comment {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+}
+
+.comments {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.commentInput {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem;
+}
