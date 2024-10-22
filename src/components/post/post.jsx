@@ -4,6 +4,7 @@ import Comments from '../comments/comments.jsx';
 import Cookies from 'js-cookie';
 import './posts.css';
 
+// Post component 
 const Post = () => {
     const [newPost, setNewPost] = useState('');
     const [title, setTitle] = useState('');
@@ -13,7 +14,7 @@ const Post = () => {
     const { userData, removeToken } = useUserData();
     const [posts, setPosts] = useState([]);
 
-    // Correctly extract username and userId from userData
+    // Correctly extract username and userId from userData context
     const username = userData?.username; 
     const userId = userData?.userId;
 
@@ -73,8 +74,16 @@ const Post = () => {
 
             if (response.ok) {
                 const createdPost = await response.json();
+
+                // Add username so buttons populate without refreshing
+                const newPostWithUser = {
+                    ...createdPost.post,
+                    userId: { username: username },
+                    _id: createdPost.post.id, // Ensure username and id are present
+                }
+
                 // Update state with new post
-                setPosts(prevPosts => [createdPost.post, ...prevPosts]); // Prepend the new post to the posts array
+                setPosts(prevPosts => [newPostWithUser, ...prevPosts]); // Prepend the new post to the posts array with username
                 setNewPost(''); 
                 setTitle(''); 
 
@@ -88,6 +97,10 @@ const Post = () => {
     };
 
     const handleDelete = async (postId) => {
+        if (!postId) {
+            console.error('Post ID is undefined. Cannot delete post.');
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:3000/posts/${postId}/delete`, {
                 method: 'DELETE',
@@ -108,7 +121,10 @@ const Post = () => {
     };
 
     const handleEdit = async (postId) => {
-
+        if (!postId) {
+            console.error('Post ID is undefined. Cannot edit post.');
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:3000/posts/${postId}/editPost`,
                 {
@@ -123,11 +139,13 @@ const Post = () => {
                     }),
                 });
             if (response.ok) {
-                const updatedPost = await response.json();
+                const { updatedPost } = await response.json();
+
                 //Update the post in the state
                 setPosts(posts.map(post =>
-                    post._id === postId ? { ...post, ...updatedPost } : post
+                    post._id === postId ? updatedPost : post
                 ));
+
                 setEditPostId(null); // exit edit mode
             } else {
                 console.error('Failed to edit post');
@@ -138,6 +156,10 @@ const Post = () => {
     }
 
     const handleEditClick = (post) => {
+        if (!post._id) {
+            console.error('Post ID is undefined. Cannot edit the post.');
+            return;
+        }
         setEditPostId(post._id); // Set the post id to edit
         setEditPostContent(post.content); 
         setEditPostTitle(post.title);
@@ -148,27 +170,29 @@ const Post = () => {
             <div className="posts">
             <div className="postEntryContainer">
             <h2>New Post</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="postForm">
                 <input 
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="title"
+                    className="postInputTitle"
                     required
                     ></input>
                 <textarea
                     value={newPost}
                     onChange={(e) => setNewPost(e.target.value)}
                     placeholder="post"
+                    className="postInputPost"
                     required>
                 </textarea>
-            <button type="submit">Submit</button>
+            <button type="submit" className="submitButton">Submit</button>
             
             </form >
             </div>
             <h2>Posts</h2>
             <ul className="postContainer">
                 {Array.isArray(posts) && posts.map(post => (
-                    <li key={post._id} className="post">
+                    <li key={post._id} >
                         {editPostId === post._id ? (
                             <>
                                 <input
@@ -187,9 +211,11 @@ const Post = () => {
                             </>
                         ) : (
                             <>
+                            <div className="post">
+                                <h2>{post.title}</h2>
                                 <p>{post.content}</p>
-                                <small>Posted by: {post.userId?.username || username}</small>
-                                <small>Title: {post.title}</small>
+                                <small>Author: {post.userId?.username || username}</small>
+                                
                                 {post.userId?.username === username && (
                                     <>
                                         <button onClick={() => handleDelete(post._id)}>
@@ -201,6 +227,7 @@ const Post = () => {
                                     </>
                                 )}
                                 <Comments postId={post._id || post.id} />
+                            </div>
                             </>
                         )}
                     </li>
@@ -210,6 +237,6 @@ const Post = () => {
             </div>
         </>
     )
-}
+};
 
 export default Post;

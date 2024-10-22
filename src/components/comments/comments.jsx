@@ -56,8 +56,13 @@ const Comments = ({ postId }) => {
 
         if (response.ok) {
             const addedComment = await response.json();
+
+            // Add username so buttons show without refreshing
+            const newCommentWithUser = {...addedComment.comment,
+                userId: { username: username },
+            }
             // Add new comment to comments then reset new comment to '' 
-            setComments((prevComments) => [...prevComments, addedComment.comment]);
+            setComments((prevComments) => [...prevComments, newCommentWithUser]);
             setNewComment('');
         } else {
             console.error('Failed to add comment');
@@ -83,10 +88,12 @@ const Comments = ({ postId }) => {
             });
 
                 if (response.ok) {
-                    const updatedComment = await response.json();
+                    const { updatedComment } = await response.json();
+
                     setComments(comments.map(comment => 
                         comment._id === commentId ? updatedComment : comment
                     ));
+
                     setEditCommentContent('');
                     setEditCommentId(null);
                 } else {

@@ -1,5 +1,6 @@
 .posts {
   display: flex;
+
   flex-direction: column;
   background-color: white;
 }
@@ -12,11 +13,16 @@
   align-items: center;
   justify-content: center;
   margin: 1rem;
+  width: 30vw;
 }
 
 .postContainer {
   display: flex;
+  flex-direction: column;
   background-color: white;
+  max-width: 60vw;
+  justify-content: center;
+  align-items: center;
 }
 
 .postEntryContainer {
@@ -26,4 +32,28 @@
   justify-content: center; /* Centers items vertically */
   width: 100%; /* Adjust width as needed */
   margin: 0 auto; /* Centers the container if a fixed width is set */
+}
+
+.postForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.postInputTitle {
+  width: 40vw;
+  max-width: 15rem;
+  margin-bottom: 1.5rem;
+}
+
+.postInputPost {
+  width: 80vw;
+  max-width: 30rem;
+  height: 15vh;
+  margin-bottom: 1.5rem;
+}
+
+li {
+  margin: 0;
 }
