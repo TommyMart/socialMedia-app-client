@@ -108,6 +108,7 @@ const Post = () => {
     };
 
     const handleEdit = async (postId) => {
+
         try {
             const response = await fetch(`http://localhost:3000/posts/${postId}/editPost`,
                 {
@@ -199,8 +200,7 @@ const Post = () => {
                                         </button>
                                     </>
                                 )}
-                                <Comments 
-                                    postId={post._id || post.id} />
+                                <Comments postId={post._id || post.id} />
                             </>
                         )}
                     </li>

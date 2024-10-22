@@ -70,19 +70,22 @@ const Comments = ({ postId }) => {
     const handleEditSubmit = async (event, commentId) => {
         event.preventDefault();
 
+        const userId = userData?.userId;
+
         try {
             const response = await fetch(`http://localhost:3000/comments/${commentId}/edit`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${Cookies.get('jwtToken')}`
                 },
-                body: JSON.stringify({ content: editCommentContent })
+                body: JSON.stringify({ content: editCommentContent, userId })
             });
 
                 if (response.ok) {
                     const updatedComment = await response.json();
-                    setComments(comments.map( comment => 
-                        comment._id === commentId ? updatedComment.comment : comment 
+                    setComments(comments.map(comment => 
+                        comment._id === commentId ? updatedComment : comment
                     ));
                     setEditCommentContent('');
                     setEditCommentId(null);
@@ -97,7 +100,7 @@ const Comments = ({ postId }) => {
 
         const handleCommentDelete = async (commentId) => {
             try {
-                const response = await fetch(`http://localhost:3000/comments/commentId/delete`, {
+                const response = await fetch(`http://localhost:3000/comments/${commentId}/delete`, {
                     method: 'DELETE',
                     headers: {
                         Authorization: `Bearer ${Cookies.get('jwtToken')}`
@@ -113,16 +116,20 @@ const Comments = ({ postId }) => {
                 console.log('Error deleting comment:', error);
             }
         };
-    
+        
+        const handleEditClick = (comment) => {
+            setEditCommentId(comment._id);
+            setEditCommentContent(comment.content);
+        };
 
     return (
         <div>
             <h4>Comments</h4>
             <ul className="comments">
                 {comments.map(comment => (
-                    <li key={comment._id} className="comment">
+                    <li key={comment?._id} className="comment">
                         {/* Show either the edit form or the comment content */}
-                        {editCommentId === comment._id ? (
+                        {editCommentId === comment?._id ? (
                             <form onSubmit={(event) => handleEditSubmit(event, comment._id)}>
                                 <input
                                     value={editCommentContent}
@@ -134,18 +141,18 @@ const Comments = ({ postId }) => {
                             </form>
                         ) : (
                             <>
-                                <p>{comment.content}</p>
-                                <p>By {comment.userId.username || username }</p>
+                                <p>{comment?.content}</p>
+                                <p>By {comment?.userId?.username || username }</p>
                             </>
                         )}
 
                         {/* Only show edit and delete buttons if the user owns the comment */}
-                        {comment.userId?.username === username && (
+                        {comment?.userId?.username === username && (
                             <>
                                 <button onClick={() => handleCommentDelete(comment._id)}>
                                     Delete
                                 </button>
-                                <button onClick={() => handleEditSubmit(comment)}>
+                                <button onClick={() => handleEditClick(comment)}>
                                     Edit
                                 </button>
                             </>
