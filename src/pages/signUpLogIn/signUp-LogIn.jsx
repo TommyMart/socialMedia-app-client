@@ -79,7 +79,7 @@ function SignUpLogIn() {
 
     return (
         <>
-        <h1 className="header">Rattle Snake</h1>
+        <h1 className="header">Welcome to Rattle Snake Events.</h1>
         <div className="signUpLogIn">
             <button
                 className="signUp"

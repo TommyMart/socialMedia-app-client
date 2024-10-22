@@ -1,11 +1,17 @@
 
+import React from 'react';
+import Logout from './logout';
+
+
 function Account() {
 
     return (
         <>
-            <h1>Account</h1>
+            <Logout />
         </>
+
     )
-}
+    }
+
 
 export default Account;
