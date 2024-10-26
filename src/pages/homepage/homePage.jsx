@@ -1,41 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useUserData } from "../../contexts/UserContext";
+import FollowButton from "../../components/followButton";
 
 
 function HomePage() {
     const { userId } = useParams();
-    const { userData, removeToken } = useUserData();
+    const { userData } = useUserData();
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
-    const location = useLocation(); // Provides current route
     
     
     useEffect(() => {
+        // if on current user's homepage
         if (userData && userData.userId === userId) {
             setUser(userData); // Set user data if it matches the URL param
         } else {
-            setUser(null); // Clear user state if not matched
+            // Fetch the target user's data
+           const fetchUserData = async () => {
+                try {
+                    const response = await fetch(`http:localhost:3000/${userId}`);
+                    const data = await response.json();
+                    setUser(data.user);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
         }
+        fetchUserData();
+    }
     }, [userData, userId]);
 
-    // useEffect(() => {
-    //     // If user is authenticated with valid userData and userId (params)
-    //     if (userData && userData.userId === userId) {
-    //         if (userData.userId === userId) {
-    //             // set user data context
-    //             setUser(userData);
-    //         } else if (location.pathname !== `/users/${userData.userId}/home`) {
-
-    //             navigate(`/users/${userData.userId}/home`, { replace: true })
-    //         }
-    //     } else {
-    //         // If no valid token or userId, redirect to login and clear
-    //         removeToken();
-    //         navigate('/', { replace: true })
-    //     }
-    // }, [userData, userId, navigate, removeToken, location.pathname]);
-
+    // If no userData, redirect to homepage
     useEffect(() => {
         if (!userData) {
             navigate('/');
@@ -53,6 +48,8 @@ function HomePage() {
             {user && (
                 <p>Your username is {user.username}</p>
             )}
+
+            <FollowButton targetUserId={userId} />
         </div>
     )
 }

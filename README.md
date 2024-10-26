@@ -1,8 +1,7 @@
-# React + Vite
+# Social Media App Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Visit App Sever [here](https://github.com/TommyMart/socialMedia-server).
 
-Currently, two official plugins are available:
+This social media blog app is a dynamic platform designed to facilitate user interaction through posting, following, and commenting features. Users can sign up and log in, each receiving a unique profile where they can create and share posts with others on the platform. Each post allows other users to engage by leaving comments, fostering a community-like atmosphere within the app. The interface displays posts in a feed, showing both recent and followed users' posts. It also implements features for users to follow and unfollow others, enabling them to curate a personalised feed based on their interests.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The app includes essential authentication features, such as using JSON Web Tokens (JWTs) and cookies, to securely handle user sessions. We also leveraged contexts to manage and store user information, making data accessible across the app and enhancing the user experience by allowing actions like editing posts or comments in real-time without the need to refresh. With user-centered features like tracking follower and following counts, as well as showing who is following whom, the app enables users to build and engage with their online presence effectively. This project not only brought together essential CRUD operations but also applied more advanced concepts like user authorization, real-time updates, and complex relational data management.
