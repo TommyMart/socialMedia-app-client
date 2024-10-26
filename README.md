@@ -4,8 +4,8 @@
 
 #### Technologies Used
 
-Backend: Node.js, Express, MongoDB
-Frontend: React, Context API, React Router
+Backend: Node.js, Express, MongoDB <br/>
+Frontend: React, Context API, React Router <br/>
 Authentication: JWT, Cookies for secure session handling
 
 ### Key Features
