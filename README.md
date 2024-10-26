@@ -1,6 +1,6 @@
 # Social Media App Client
 
-### Visit App Sever [here](https://github.com/TommyMart/socialMedia-server).
+### View App's backend [here](https://github.com/TommyMart/socialMedia-server).
 
 #### Technologies Used
 
