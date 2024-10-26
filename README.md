@@ -2,6 +2,35 @@
 
 ### Visit App Sever [here](https://github.com/TommyMart/socialMedia-server).
 
-This social media blog app is a dynamic platform designed to facilitate user interaction through posting, following, and commenting features. Users can sign up and log in, each receiving a unique profile where they can create and share posts with others on the platform. Each post allows other users to engage by leaving comments, fostering a community-like atmosphere within the app. The interface displays posts in a feed, showing both recent and followed users' posts. It also implements features for users to follow and unfollow others, enabling them to curate a personalised feed based on their interests.
+#### Technologies Used
 
-The app includes essential authentication features, such as using JSON Web Tokens (JWTs) and cookies, to securely handle user sessions. We also leveraged contexts to manage and store user information, making data accessible across the app and enhancing the user experience by allowing actions like editing posts or comments in real-time without the need to refresh. With user-centered features like tracking follower and following counts, as well as showing who is following whom, the app enables users to build and engage with their online presence effectively. This project not only brought together essential CRUD operations but also applied more advanced concepts like user authorization, real-time updates, and complex relational data management.
+Backend: Node.js, Express, MongoDB
+Frontend: React, Context API, React Router
+Authentication: JWT, Cookies for secure session handling
+
+### Key Features
+
+#### User Authentication:
+
+- Secure user sign-up and log-in functionality using JSON Web Tokens (JWTs).
+- User sessions managed via JWTs and cookies.
+
+#### User Profiles:
+
+- Unique profiles for each user to post content and view personalized feeds.
+- Follow and unfollow features to build a curated following list.
+
+#### Posting & Interaction:
+
+- Users can create, edit, and delete their own posts.
+- Real-time comments on posts to encourage interaction and community engagement.
+
+#### Dynamic Feed:
+
+- Feed displays posts from both recent and followed users.
+- Follower and following counts shown on profiles to track connections.
+
+#### Real-Time Updates:
+
+- Context-based data management enables instant post and comment updates without page refreshes.
+- Comments, follower counts, and follow/unfollow status update in real-time.
