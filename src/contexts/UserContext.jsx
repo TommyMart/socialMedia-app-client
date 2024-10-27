@@ -20,7 +20,10 @@ export default function UserProvider({ children }){
             const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
+
+            // console.log(JSON.parse(jsonPayload))
             return JSON.parse(jsonPayload); // Return the decoded payload as a JavaScript object
+            
         } catch (error) {
             console.error('Error decoding token:', error);
             return null;
@@ -30,6 +33,7 @@ export default function UserProvider({ children }){
     const setToken = (token) => {
         Cookies.set('jwtToken', token, { expires: 2 });
         const decoded = decodeJwt(token);
+        console.log('decoded user info: ', decoded)
         setUserData(decoded); // Set user data based on decoded token
     };
     

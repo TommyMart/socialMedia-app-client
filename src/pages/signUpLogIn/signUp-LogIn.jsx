@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "../../contexts/UserContext";
+import Cookies from 'js-cookie';
 import './signUpLogIn.css'
 
 
@@ -43,6 +44,7 @@ function SignUpLogIn() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    
                 },
                 body: JSON.stringify(formData) 
         });

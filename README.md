@@ -17,7 +17,7 @@ Authentication: JWT, Cookies for secure session handling
 
 #### User Profiles:
 
-- Unique profiles for each user to post content and view personalized feeds.
+- Unique profiles for each user to post content and view personalised feeds.
 - Follow and unfollow features to build a curated following list.
 
 #### Posting & Interaction:

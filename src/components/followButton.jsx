@@ -9,13 +9,22 @@ const FollowButton = ({ targetUserId }) => {
     const [followingCount, setFollowingCount] = useState(0);
 
     const fetchFollowData = async () => {
-        try {
+        const token = Cookies.get('jwtToken');
+
+        if (!token) {
+            console.error('Token is missing');
+            return;
+        }
+         try {
             const response = await fetch(`http://localhost:3000/follow/${targetUserId}/status`, {
                 headers: {
-                    Authorization: `Bearer ${Cookies.get('jwttoken')}`,
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
+
+            // Debug
+            console.log('Token being sent via heaer:', `Bearer ${token}`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -37,8 +46,11 @@ const FollowButton = ({ targetUserId }) => {
         try {
             const response = await fetch(`http://localhost:3000/follow/${targetUserId}/follow`, {
                 method: 'POST',
-                Authorization: `Bearer ${Cookies.get('jwttoken')}`,
-                'Content-Type': 'application/json'
+                headers: {
+                    Authorization: `Bearer ${Cookies.get('jwtToken')}`,
+                    'Content-Type': 'application/json'
+                }
+                
             });
 
             if (response.ok) {
@@ -51,10 +63,13 @@ const FollowButton = ({ targetUserId }) => {
 
     const handleUnfollow = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/${targetUserId}/unfollow`, {
+            const response = await fetch(`http://localhost:3000/follow/${targetUserId}/unfollow`, {
                 method: 'DELETE',
-                Authorization: `Bearer ${Cookies.get('jwttoken')}`,
-                'Content-Type': 'application/json'
+                headers: {
+                    Authorization: `Bearer ${Cookies.get('jwtToken')}`,
+                    'Content-Type': 'application/json'
+                }
+                
             });
 
             if (response.ok) {

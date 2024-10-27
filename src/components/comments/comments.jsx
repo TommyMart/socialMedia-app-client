@@ -49,6 +49,7 @@ const Comments = ({ postId }) => {
             const response = await fetch(`http://localhost:3000/comments/${postId}/newComment`, {
                 method: 'POST',
                 headers: {
+                    Authorization: `Bearer ${Cookies.get('jwtToken')}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ userId, content: newComment })
@@ -110,6 +111,7 @@ const Comments = ({ postId }) => {
                 const response = await fetch(`http://localhost:3000/comments/${commentId}/delete`, {
                     method: 'DELETE',
                     headers: {
+                        'Content-Type': 'application/json',
                         Authorization: `Bearer ${Cookies.get('jwtToken')}`
                     }
                 });

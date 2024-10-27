@@ -30,6 +30,8 @@ function HomePage() {
     }
     }, [userData, userId]);
 
+    // Debug
+    // console.log(`${Cookies.get(jwtToken)}`)
     // If no userData, redirect to homepage
     useEffect(() => {
         if (!userData) {
