@@ -214,7 +214,8 @@ const Post = () => {
                             <div className="post">
                                 <h2>{post.title}</h2>
                                 <p>{post.content}</p>
-                                <small>Author: {post.userId?.username || username}</small>
+                                <small>Author: <a className='author' href={`/users/${post.userId._id || userData._id}/home`}>
+                                    {post.userId?.username || username}</a></small>
                                 
                                 {post.userId?.username === username && (
                                     <>

@@ -20,3 +20,7 @@
   flex-direction: column;
   margin: 2rem;
 }
+
+.author {
+  color: blue;
+}

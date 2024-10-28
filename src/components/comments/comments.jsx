@@ -7,7 +7,6 @@ import './comments.css';
 
 const Comments = ({ postId }) => {
 
-    console.log('PostId received in Comment component:', postId);
 
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
@@ -43,7 +42,6 @@ const Comments = ({ postId }) => {
         event.preventDefault();
         
         const userId = userData?.userId;
-        console.log('User Id:', userId, 'PostId:', postId);
 
         try {
             const response = await fetch(`http://localhost:3000/comments/${postId}/newComment`, {
@@ -151,7 +149,9 @@ const Comments = ({ postId }) => {
                         ) : (
                             <>
                                 <p>{comment?.content}</p>
-                                <p>By {comment?.userId?.username || username }</p>
+                                <p>By <a className='author' href={`/users/${comment?.userId._id || userData.userId}/home`}>
+                                {comment?.userId?.username || username }
+                                </a></p>
                             </>
                         )}
 
