@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useUserData } from "../../contexts/UserContext";
+import { useUserData } from "../../contexts/userContext";
 import FollowButton from "../../components/followButton";
 
 

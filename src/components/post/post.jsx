@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useUserData } from "../../contexts/UserContext";
+import { useUserData } from "../../contexts/userContext.jsx";
 import Comments from '../comments/comments.jsx';
 import Cookies from 'js-cookie';
 import './posts.css';

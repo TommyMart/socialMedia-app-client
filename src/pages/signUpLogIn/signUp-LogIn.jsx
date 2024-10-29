@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserData } from "../../contexts/UserContext";
+import { useUserData } from "../../contexts/userContext";
 import Cookies from 'js-cookie';
 import './signUpLogIn.css'
 
