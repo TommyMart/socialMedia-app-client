@@ -9,6 +9,9 @@ function HomePage() {
     const { userData } = useUserData();
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
+
+    const username = userData?.username; 
+    
     
     
     useEffect(() => {
@@ -43,13 +46,11 @@ function HomePage() {
         <div>
             
             {userData ? ( // Check if user data is available
-                <h1>Welcome to your home page, {userData.name}.</h1>
+                <h1>Welcome to your home page, {username}.</h1>
             ) : (
                 <h1>Loading...</h1> // Display loading message while fetching user data
             )}
-            {user && (
-                <p>Your username is {user.username}</p>
-            )}
+            
 
             <FollowButton targetUserId={userId} />
         </div>

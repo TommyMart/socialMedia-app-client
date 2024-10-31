@@ -1,18 +1,16 @@
 import Post from "../../components/post/post";
 
-function Tutorials() {
+function Blog() {
 
     
 
     return (
 
         <>
-            <h1>Tutorials</h1>
+            <h1>Blog</h1>
             <Post />
         </>
     )
 }
 
-export default Tutorials;
-
-//ffff
+export default Blog;

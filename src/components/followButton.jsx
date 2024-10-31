@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 
 
 const FollowButton = ({ targetUserId }) => {
+
     const [isFollowing, setIsFollowing] = useState(false);
     const [followersCount, setFollowersCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);

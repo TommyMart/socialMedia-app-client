@@ -3,10 +3,10 @@ import './App.css';
 import HomePage from './pages/homepage/homePage';
 import SignUpLogIn from './pages/signUpLogIn/signUp-LogIn';
 import { RouterProvider, createBrowserRouter, Outlet, useLocation } from 'react-router-dom';
-import NavBar from './components/NavBar/navBar';
-import Tutorials from './pages/tutorials/tutorials';
-import About from './pages/About/about';
-import Account from './pages/Account/account';
+import NavBar from './components/navigationBar/navBar';
+import Blog from './pages/blog/blog';
+import About from './pages/about/about';
+import Account from './pages/account/account';
 import ProtectedRoute from './components/protectedRoute'; // Path updated to match correct location of the ProtectedRoute
 
 // Layout component that includes NavBar conditionally
@@ -42,10 +42,10 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: '/users/:userId/tutorials',
+        path: '/users/:userId/blog',
         element: (
           <ProtectedRoute>
-            <Tutorials /> 
+            <Blog />  
           </ProtectedRoute>
         )
       },
